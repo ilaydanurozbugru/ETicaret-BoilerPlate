@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ETicaret.Entities
 {
-    [Table("Categories")]
+    
     public class Category : Entity<int>
     {
-        [Required]
-        [MaxLength(128)]
-        public string CategoryName { get; set; }
+        public string  Name { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

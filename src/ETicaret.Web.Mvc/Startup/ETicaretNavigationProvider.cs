@@ -32,9 +32,9 @@ namespace ETicaret.Web.Startup
                 )
                 .AddItem(
                     new MenuItemDefinition(
-                        PageNames.Products,
+                        PageNames.Category,
                         L("Categories"),
-                        url: "Categories/Index",
+                        url: "Categories",
                         icon: "fas fa-users",
                         permissionDependency: new SimplePermissionDependency(PermissionNames.Pages_Products)
                     )

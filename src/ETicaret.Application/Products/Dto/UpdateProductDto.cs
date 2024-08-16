@@ -17,5 +17,8 @@ namespace ETicaret.Products.Dto
 
         [Range(0, int.MaxValue, ErrorMessage = "Stock quantity must be a non-negative number")]
         public int StockQuantity { get; set; }
+
+        [Range(1, int.MaxValue)]
+        public int CategoryId { get; set; }
     }
 }

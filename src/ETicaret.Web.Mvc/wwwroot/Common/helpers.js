@@ -1,5 +1,19 @@
 ﻿var app = app || {};
 (function () {
+
+    app.resetFilter = function (form) {
+        $("textarea.datatable-filter, select.datatable-filter, input.datatable-filter").each(function () {
+
+            $(this).val("")
+        });
+        $('input.datatable-filter[type="checkbox"]').each(function () {
+            $(this).attr("checked", !1)
+        });
+
+    };  
+
+   
+
     app.htmlUtils = {
         htmlEncodeText: function (value) {
             return $("<div/>").text(value).html();
@@ -17,4 +31,8 @@
             return JSON.parse(app.htmlUtils.htmlDecodeText(JSON.stringify(jsonObject)));
         }
     };   
+
+   
+   
+     
 })();

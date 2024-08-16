@@ -31,7 +31,8 @@
       "wwwroot/libs/abp-web-resources/Abp/Framework/scripts/libs/abp.blockUI.js",
       "wwwroot/libs/abp-web-resources/Abp/Framework/scripts/libs/abp.spin.js",
       "wwwroot/libs/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js",
-      "wwwroot/js/main.js"
+      "wwwroot/js/main.js",
+      "wwwroot/js/helper.js"
     ]
   },
   {
@@ -80,13 +81,14 @@
       "wwwroot/libs/abp-web-resources/Abp/Framework/scripts/libs/abp.spin.js",
       "wwwroot/libs/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js",
       "wwwroot/libs/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr-client.js",
-      
+
       "wwwroot/libs/jquery-validate/jquery.validate.js",
       "wwwroot/libs/jquery-validate/jquery.validate.unobtrusive.js",
       "wwwroot/libs/push.js/push.js",
 
       "wwwroot/js/abp.dataTable.js",
-      "wwwroot/js/main.js",
+      "wwwroot/js/main.js", 
+      "wwwroot/js/helper.js",
       "wwwroot/view-resources/Views/Shared/_Layout.js"
     ]
   },
@@ -137,7 +139,7 @@
     "outputFileName": "wwwroot/view-resources/Views/Shared/Components/TenantChange/Default.min.js",
     "inputFiles": [
       "wwwroot/view-resources/Views/Shared/Components/TenantChange/Default.js"
-    ]
+    ] 
   },
   {
     "outputFileName": "wwwroot/view-resources/Views/Shared/Components/TenantChange/_ChangeModal.min.js",
@@ -154,7 +156,10 @@
   {
     "outputFileName": "wwwroot/view-resources/Views/_Bundles/helpers.min.js",
     "inputFiles": [
-      "wwwroot/Common/helpers.js"
+      "wwwroot/Common/ModalManager.js",
+      "wwwroot/Common/helpers.js",
+      "wwwroot/Common/datatables.record-actions.js",
+      "wwwroot/Common/ResourceLoader.js"
     ]
   }
 ]

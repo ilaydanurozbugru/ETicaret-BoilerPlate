@@ -49,6 +49,7 @@
     @*custom scripts start*@
     <script src="~/js/abp.dataTable.js" asp-append-version="true"></script>
     <script src="~/js/main.js" asp-append-version="true"></script>
+  
     @*custom scripts end*@
     
     <script type="text/javascript">
@@ -57,6 +58,7 @@
         var abp = abp || {};
         abp.appPath = '@ApplicationPath';
     </script>
+    <script src="~/js/helper.js" asp-append-version="true"></script>
 </environment>
 
 <environment names="Staging,Production">

@@ -1,17 +1,27 @@
 ﻿(function ($) {
-    var _productService = abp.services.app.product,
+    var _service = abp.services.app.product,
         l = abp.localization.getSource('ETicaret'),
         _$modal = $('#ProductCreateModal'),
         _$form = _$modal.find('form'),
         _$table = $('#ProductsTable');
-
-    var _$productsTable = _$table.DataTable({
+    var _permissions = {
+        create: abp.auth.hasPermission('Pages.Product.Create'),
+        edit: abp.auth.hasPermission('Pages.Product.Update'),
+        'delete': abp.auth.hasPermission('Pages.Product.Delete'),
+    };
+    var _createOrEditModal = new app.ModalManager({
+        viewUrl: abp.appPath + 'Products/CreateOrUpdate',
+        scriptUrl: abp.appPath + 'view-resources/Views/Products/_CreateOrUpdate.js',
+        modalClass: 'CreateOrEditProdcutModal',
+        cssClass: 'scrollable-modal'
+    }); 
+    var _$table = _$table.DataTable({
         paging: true,
         serverSide: true,
         listAction: {
-            ajaxFunction: _productService.getAll,
+            ajaxFunction: _service.getList,
             inputFilter: function () {
-                return $('#ProductsSearchForm').serializeFormToObject(true);
+                return $('#searchForm').serializeFormToObject(true);
             }
         },
         buttons: [
@@ -30,108 +40,96 @@
             {
                 targets: 0,
                 data: 'productName',
-                sortable: false,
-                width: '30%'
+                sortable: false
             },
             {
                 targets: 1,
-                data: 'description',
-                sortable: false,
-                width: '20%'
+                data: 'categoryName',
+                sortable: false
             },
             {
                 targets: 2,
-                data: 'price',
-                sortable: false,
-                width: '15%'
+                data: 'description',
+                sortable: false
             },
             {
                 targets: 3,
-                data: 'stockQuantity',
-                sortable: false,
-                width: '15%'
+                data: 'price',
+                sortable: false
             },
             {
                 targets: 4,
-                data: null,
-                sortable: false,
-                width: '20%',
+                data: 'stockQuantity',
+                sortable: false
+            },
+            {
+                targets: 5,
+                data: "Actions",
+                responsivePriority: -1,
+                orderable: false,
+                autoWidth: false,
                 defaultContent: '',
-                render: (data, type, row, meta) => {
-                    return [
-                        `<button type="button" class="btn btn-sm bg-secondary edit-product" data-product-id="${row.id}" data-toggle="modal" data-target="#ProductEditModal">`,
-                        `<i class="fas fa-pencil-alt"></i> ${l('Edit')}`,
-                        '</button>',
-                        `<button type="button" class="btn btn-sm bg-danger delete-product" data-product-id="${row.id}" data-product-name="${row.productName}">`,
-                        `<i class="fas fa-trash"></i> ${l('Delete')}`,
-                        '</button>',
-                    ].join('');
+                rowAction: {
+                    text: '<i class="fa fa-cog"></i> ' + l('Actions') + ' <span class="caret"></span>',
+                    items: [{
+                        text: l('Edit'),
+                        visible: function () {
+                            return _permissions.edit;
+                        },
+                        action: function (data) {
+                            _createOrEditModal.open({ id: data.record.id });
+                        }
+                    }, {
+                        text: l('Delete'),
+                        visible: function () {
+                            return _permissions.delete;
+                        },
+                        action: function (data) {
+                            deleteData(data.record);
+                        }
+                    }]
                 }
             }
         ]
     });
 
-    $(document).on('click', '.delete-product', function () {
-        var productId = $(this).attr("data-product-id");
-        var productName = $(this).attr('data-product-name');
-
-        deleteProduct(productId, productName);
+    abp.event.on('app.createOrEditProdcutModalSaved', (data) => {
+        reloadTable();
     });
 
-    $(document).on('click', '.edit-product', function (e) {
-        var productId = $(this).attr("data-product-id");
+    function reloadTable() {
+        _$table.ajax.reload();
+    }
 
-        e.preventDefault();
-        abp.ajax({
-            url: abp.appPath + 'Products/EditModal?productId=' + productId,
-            type: 'POST',
-            dataType: 'html',
-            success: function (content) {
-                $('#ProductEditModal div.modal-content').html(content);
-            },
-            error: function (e) {
-                console.error('Error loading edit modal:', e);
-            }
-        })
-    });
-
-    abp.event.on('product.edited', (data) => {
-        _$productsTable.ajax.reload();
-    });
-
-    function deleteProduct(productId, productName) {
+    function deleteData(data) {
         abp.message.confirm(
             abp.utils.formatString(
                 l('AreYouSureWantToDelete'),
-                productName),
+                data.productName),
             null,
             (isConfirmed) => {
                 if (isConfirmed) {
-                    _productService.delete({
-                        id: productId
+                    _service.delete({
+                        id: data.id
                     }).done(() => {
                         abp.notify.info(l('SuccessfullyDeleted'));
-                        _$productsTable.ajax.reload();
+                        reloadTable();
                     });
                 }
             }
         );
     }
-
-    _$modal.on('shown.bs.modal', () => {
-        _$modal.find('input:not([type=hidden]):first').focus();
-    }).on('hidden.bs.modal', () => {
-        _$form.clearForm();
+    $("#createButton").click(function () {
+        _createOrEditModal.open();
     });
 
-    $('.btn-search').on('click', (e) => {
-        _$productsTable.ajax.reload();
+    $("#clearButton").click(function () {
+        app.resetFilter($('#searchForm'));
+        reloadTable();
     });
 
-    $('.txt-search').on('keypress', (e) => {
-        if (e.which == 13) {
-            _$productsTable.ajax.reload();
-            return false;
-        }
+    $("#searchButton").click(function () {
+        reloadTable();
     });
+    
 })(jQuery);

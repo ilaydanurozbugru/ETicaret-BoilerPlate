@@ -8,5 +8,6 @@
         public const string Users = "Users";
         public const string Roles = "Roles"; 
         public const string Products = "Products"; 
+        public const string Category = "Category";
     }
 }

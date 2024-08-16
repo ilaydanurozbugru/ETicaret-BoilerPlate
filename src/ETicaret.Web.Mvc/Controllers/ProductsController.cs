@@ -1,11 +1,10 @@
 ﻿using Abp.Application.Services.Dto;
-using Abp.AspNetCore.Mvc.Controllers;
-using ETicaret.Products.Dto;
-using ETicaret.Products;
-using ETicaret.Web.Models.Products;
+using Abp.AspNetCore.Mvc.Controllers; 
+using ETicaret.Products; 
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Abp.Authorization;
+using ETicaret.Authorization;
 
 namespace ETicaret.Web.Controllers
 {
@@ -20,79 +19,20 @@ namespace ETicaret.Web.Controllers
         }
 
         // Index: Ürünlerin listelendiği sayfa
-        public async Task<ActionResult> Index(PagedProductResultRequestDto input)
-        {
-            var result = await _productAppService.GetAllAsync(input);
-
-            var model = new ProductListViewModel
-            {
-                Products = result.Items,
-                TotalCount = result.TotalCount
-            };
-
-            return View(model);
+        public async Task<ActionResult> Index()
+        { 
+            return View();
         }
 
         // GET: Create Modal View
-        public ActionResult CreateModal()
+        [AbpAuthorize(PermissionNames.Pages_Product_Update, PermissionNames.Pages_Product_Create)]
+        public async Task<ActionResult> CreateOrUpdate(int? id)
         {
-            var model = new ProductCreateViewModel
-            {
-                Product = new CreateProductDto()
-            };
+            var entity = await _productAppService.GetForEdit(new EntityDto<int?>(id));
 
-            return PartialView("_CreateModal", model);
+            return PartialView("_CreateOrUpdate", entity);
         }
 
-        // POST: Create New Product
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(CreateProductDto input)
-        {
-            if (ModelState.IsValid)
-            {
-                await _productAppService.CreateAsync(input);
-                return RedirectToAction("Index");
-            }
 
-            // Eğer model valid değilse, formu geri döndürürüz.
-            var model = new ProductCreateViewModel
-            {
-                Product = input
-            };
-
-            return View("CreateModal", model);
-        }
-
-        // GET: Edit Modal View
-        public async Task<ActionResult> EditModal(int productId)
-        {
-            var product = await _productAppService.GetAsync(new EntityDto<int>(productId));
-            var model = new EditProductModalViewModel
-            {
-                Product = product
-            };
-
-            return PartialView("_EditModal", model);
-        }
-
-        // POST: Delete Product
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
-        {
-            await _productAppService.DeleteAsync(new EntityDto<int>(id));
-            return RedirectToAction("Index");
-        }
-
-        // JSON: Get All Products (For DataTables or AJAX)
-        public async Task<JsonResult> GetAllProducts()
-        {
-            var result = await _productAppService.GetAllAsync(new PagedProductResultRequestDto());
-            return Json(new
-            {
-                data = result.Items
-            });
-        }
     }
 }

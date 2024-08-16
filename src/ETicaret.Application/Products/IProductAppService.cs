@@ -6,11 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ETicaret.Products.Dto;
+using ETicaret.Categories.Dto;
 
 namespace ETicaret.Products
 {
-    public interface IProductAppService : IAsyncCrudAppService<ProductDto, int, PagedProductResultRequestDto, CreateProductDto, UpdateProductDto>
+    public interface IProductAppService :  IApplicationService
     {
-        Task<PagedResultDto<ProductDto>> GetAllAsync(PagedProductResultRequestDto input);
+        Task CreateAsync(CreateProductDto input);
+        Task UpdateAsync(UpdateProductDto input);
+        Task DeleteAsync(EntityDto<int> input);
+        Task<PagedResultDto<ProductListDto>> GetList(ProductInput input);
+        Task<ProductDto> GetForEdit(EntityDto<int?> input);
     }
 }

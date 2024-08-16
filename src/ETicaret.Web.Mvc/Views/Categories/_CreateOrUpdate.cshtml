@@ -1,0 +1,23 @@
+﻿@using ETicaret.Categories.Dto
+@using ETicaret.Web.Models.Common.Modals
+@model CategoryDto
+@{
+    Layout = null;
+}
+
+<div class="modal-content">
+    @await Html.PartialAsync("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Create")))
+    <form name="MainForm" role="form" class="form-horizontal">
+        @Html.HiddenFor(x=>x.Id)
+        <div class="modal-body">
+            <div class="form-group row required">
+                <label class="col-md-3 col-form-label" for="rolename">@L("Name")</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control", required = "required", maxlength = "150", minlength = "2" })
+                 
+                </div>
+            </div>
+        </div>
+        @await Html.PartialAsync("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+    </form>
+</div>
