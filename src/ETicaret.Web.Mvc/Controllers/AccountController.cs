@@ -112,7 +112,7 @@ namespace ETicaret.Web.Controllers
         public async Task<ActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login");
+            return RedirectToAction("Index" ,"Home"); //Anasayfaya yönlerdime
         }
 
         private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)

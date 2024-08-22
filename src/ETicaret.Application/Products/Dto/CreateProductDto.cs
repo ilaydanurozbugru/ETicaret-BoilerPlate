@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ETicaret.Products.Dto
@@ -21,5 +22,8 @@ namespace ETicaret.Products.Dto
         [Range(1, int.MaxValue)]
         public int CategoryId { get; set; }
 
+        public Guid ImageId { get; set; }
+
+        public string ImageToken { get; set; }
     }
 }

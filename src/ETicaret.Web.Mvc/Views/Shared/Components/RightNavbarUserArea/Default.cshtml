@@ -1,15 +1,55 @@
 ﻿@model ETicaret.Web.Views.Shared.Components.RightNavbarUserArea.RightNavbarUserAreaViewModel
-<li class="nav-item dropdown nav-user-menu">
-    <a href="javascript:void(0);" class="nav-link" data-toggle="dropdown" role="button">
-        <img class="user-image img-circle elevation-2" src="~/libs/admin-lte/dist/img/avatar5.png" alt="User Image">
-    </a>
-    <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" asp-controller="Users" asp-action="ChangePassword">
-            <i class="fas fa-user-edit"></i> @L("UpdatePassword")
-        </a>
-        <a class="dropdown-item" asp-controller="Account" asp-action="Logout">
-            <i class="fas fa-sign-out-alt"></i> @L("Logout")
-        </a>
-    </div>
-</li>
+@inject Abp.Runtime.Session.IAbpSession AbpSession
 
+@if (AbpSession.UserId.HasValue)
+{
+    <li class="nav-item dropdown nav-user-menu">
+        <a href="javascript:void(0);" class="nav-link" data-toggle="dropdown" role="button">
+            @Model.LoginInformations.User.Name @Model.LoginInformations.User.Surname
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" asp-controller="Account" asp-action="Logout">
+                <i class="fas fa-sign-out-alt"></i> Çıkış
+            </a>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Cart" asp-action="Index">
+            <i class="fas fa-cart-shopping"></i> Sepetim
+            <span id="cart-total" class="badge badge-primary"></span>
+        </a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Account" asp-action="Login">
+            <i class="fas fa-sign-in-alt"></i> Giriş Yap
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Account" asp-action="Register">
+            <i class="fas fa-user-plus"></i> Kayıt Ol
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Cart" asp-action="Index">
+            <i class="fas fa-cart-shopping"></i> Sepetim
+            <span id="cart-total" class="badge badge-primary"></span>
+        </a>
+    </li>
+}
+
+<script>
+    function updateCartTotal() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        document.getElementById('cart-total').textContent = totalAmount.toLocaleString('tr-TR', {
+            style: 'currency',
+            currency: 'TRY'
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', updateCartTotal);
+</script>

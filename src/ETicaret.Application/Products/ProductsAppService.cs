@@ -9,6 +9,7 @@ using ETicaret.Categories.Dto;
 using ETicaret.Common.Dto;
 using ETicaret.Entities;
 using ETicaret.Products.Dto;
+using ETicaret.Storage;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,21 +24,24 @@ namespace ETicaret.Products
     {
         private readonly IRepository<Product> _prodcutRepository;
         private readonly IRepository<Category> _categoryRepository;
-
-        public ProductAppService(IRepository<Product> productRepository, IRepository<Category> categoryRepository)
+        private readonly IStorageAppService _storageAppService;
+        public ProductAppService(IRepository<Product> productRepository,
+                                 IStorageAppService storageAppService,
+                                 IRepository<Category> categoryRepository)
         {
             _prodcutRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _storageAppService = storageAppService;
         }
 
         public async Task<PagedResultDto<ProductListDto>> GetList(ProductInput input)
         {
-            var query = _prodcutRepository.GetAll()
+            var query = _prodcutRepository.GetAll().Include(x => x.Category)
                 .WhereIf(!string.IsNullOrEmpty(input.Description), x => x.Description.ToLower().Contains(input.Description.ToLower()))
                 .WhereIf(!string.IsNullOrEmpty(input.ProductName), x => x.ProductName.ToLower().Contains(input.ProductName.ToLower()))
                 .WhereIf(input.Price.HasValue, x => x.Price == input.Price)
                 .WhereIf(input.StockQuantity.HasValue, x => x.StockQuantity == input.StockQuantity)
-                .WhereIf(!string.IsNullOrEmpty(input.ProductName), x => x.ProductName.ToLower().Contains(input.ProductName.ToLower()));
+                .WhereIf(!string.IsNullOrEmpty(input.CategoryName), x => x.Category.Name.ToLower().Contains(input.CategoryName.ToLower()));
             var count = await query.CountAsync();
             var items = await query.PageBy(input).ToListAsync();
             return new PagedResultDto<ProductListDto>(count, ObjectMapper.Map<List<ProductListDto>>(items));
@@ -63,6 +67,10 @@ namespace ETicaret.Products
         public async Task CreateAsync(CreateProductDto input)
         {
             var category = ObjectMapper.Map<Product>(input);
+            if (!string.IsNullOrEmpty(input.ImageToken))
+            {
+                category.ImageId = await _storageAppService.UpdateFile(input.ImageToken, null);
+            }
             await _prodcutRepository.InsertAsync(category);
         }
 
@@ -70,6 +78,10 @@ namespace ETicaret.Products
         public async Task UpdateAsync(UpdateProductDto input)
         {
             var category = await _prodcutRepository.GetAsync(input.Id);
+            if (!string.IsNullOrEmpty(input.ImageToken))
+            {
+                category.ImageId = await _storageAppService.UpdateFile(input.ImageToken, category.ImageId);
+            }
             ObjectMapper.Map(input, category);
         }
 

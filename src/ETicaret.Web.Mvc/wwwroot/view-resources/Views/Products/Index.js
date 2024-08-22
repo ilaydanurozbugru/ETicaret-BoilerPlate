@@ -38,32 +38,48 @@
         },
         columnDefs: [
             {
+
                 targets: 0,
+                data: "FileObjectId",
+                render: function (id, ype, row, meta) {
+                    
+                    
+                    if (row.imageId) {
+                        var profilePictureUrl = "/File/GetImageById?id=" + row.imageId;
+
+                        return "<img src='" + profilePictureUrl + "' style='max-height:50px' class='img-circle' />";
+                    }
+
+                    return "";
+                }
+            },
+            {
+                targets: 1,
                 data: 'productName',
                 sortable: false
             },
             {
-                targets: 1,
+                targets: 2,
                 data: 'categoryName',
                 sortable: false
             },
             {
-                targets: 2,
+                targets: 3,
                 data: 'description',
                 sortable: false
             },
             {
-                targets: 3,
+                targets: 4,
                 data: 'price',
                 sortable: false
             },
             {
-                targets: 4,
+                targets: 5,
                 data: 'stockQuantity',
                 sortable: false
             },
             {
-                targets: 5,
+                targets: 6,
                 data: "Actions",
                 responsivePriority: -1,
                 orderable: false,

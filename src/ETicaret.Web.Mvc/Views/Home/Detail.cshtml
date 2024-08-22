@@ -1,0 +1,91 @@
+﻿@model ETicaret.Products.Dto.ProductDto
+
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner border">
+                    <div class="carousel-item active">
+                        <img class="d-block w-100 product-img" @* src="/Urunler/@Model.ProductPicture" *@ alt="Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 pb-5">
+            <h3 class="font-weight-semi-bold">@Model.ProductName</h3>
+            <h3 class="font-weight-semi-bold mb-4">@Model.Price.ToString("c")</h3>
+
+            <div class="d-flex align-items-center mb-4 pt-2">
+                <a href="javascript:void(0);" class="btn btn-primary px-4 add-to-cart"
+                   data-id="@Model.Id"
+                   data-name="@Model.ProductName"
+                   data-price="@Model.Price"
+                @* data-image="/Urunler/@Model.ProductPicture" *@>
+                    <i class="fa fa-shopping-cart mr-2"></i> Sepete Ekle
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Ürün Açıklaması</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-pane-1">
+                    <h4 class="mb-3">Ürün Açıklaması</h4>
+                    <p class="parea">@Html.Raw(Model.Description)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sepet tutarını güncelleyen fonksiyon
+    function updateCartTotal() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let totalAmount = cart.reduce((total, product) => total + product.price * product.quantity, 0);
+
+        // Navbar'daki sepetteki toplam tutarı güncelle
+        document.getElementById('cart-total').textContent = totalAmount.toFixed(2) + " TL";
+    }
+
+    document.querySelector('.add-to-cart').addEventListener('click', function () {
+        const productId = this.getAttribute('data-id');
+        const productName = this.getAttribute('data-name');
+        const productPrice = parseFloat(this.getAttribute('data-price'));
+        const productImage = this.getAttribute('data-image');
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Ürün zaten varsa adeti artır
+        let product = cart.find(item => item.id === productId);
+        if (product) {
+            product.quantity++;
+        } else {
+            // Ürün yoksa yeni ürün olarak ekle
+            cart.push({
+                id: productId,
+                name: productName,
+                price: productPrice,
+                image: productImage,
+                quantity: 1
+            });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Sepete eklendiğinde bildirim göster
+        toastr.success('Ürün sepete eklendi!');
+
+        // Sepet toplamını güncelle
+        updateCartTotal();
+    });
+
+    // Sayfa yüklendiğinde sepet toplamını güncelle
+    document.addEventListener('DOMContentLoaded', function () {
+        updateCartTotal();
+    });
+</script>

@@ -7,7 +7,8 @@
 
 <div class="modal-content">
     @await Html.PartialAsync("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Create")))
-    <form name="MainForm" role="form" class="form-horizontal">
+    <form name="MainForm" role="form" class="form-horizontal" action="@(ApplicationPath + "File/UploadFile")">
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(x=>x.Id)
         <div class="modal-body">
             <div class="form-group row required">
@@ -24,7 +25,13 @@
                  
                 </div>
             </div>
-            
+            <div class="form-group row required">
+                <label class="col-md-3 col-form-label" for="ProductName">@L("Picture")</label>
+                <div class="col-md-9">
+                    <input name="Image" id="Image"  type="file"/>
+                </div>
+            </div>
+
             <div class="form-group row required">
                 <label class="col-md-3 col-form-label" for="Price">@L("Price")</label>
                 <div class="col-md-9">

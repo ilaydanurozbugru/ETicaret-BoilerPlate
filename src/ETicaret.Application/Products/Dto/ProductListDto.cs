@@ -19,5 +19,7 @@ namespace ETicaret.Products.Dto
         public int StockQuantity { get; set; }
 
         public string CategoryName { get; set; }
+
+        public Guid ImageId { get; set; }
     }
 }

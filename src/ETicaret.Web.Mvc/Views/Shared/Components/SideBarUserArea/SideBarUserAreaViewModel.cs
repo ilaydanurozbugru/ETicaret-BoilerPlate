@@ -10,6 +10,12 @@ namespace ETicaret.Web.Views.Shared.Components.SideBarUserArea
 
         public string GetShownLoginName()
         {
+           
+            if (LoginInformations?.User == null)
+            {
+                return "Misafir"; // Kullanıcı giriş yapmadıysa gösterilecek varsayılan isim
+            }
+
             var userName = LoginInformations.User.UserName;
 
             if (!IsMultiTenancyEnabled)

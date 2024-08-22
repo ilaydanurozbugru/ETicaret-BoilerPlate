@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ETicaret.Storage;
 
 namespace ETicaret.Entities
 {
@@ -28,5 +29,10 @@ namespace ETicaret.Entities
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; }
+
+        public Guid ImageId { get; set; }
+
+        [ForeignKey(nameof(ImageId))]
+        public BinaryObject BinaryObject { get; set; }
     }
 }

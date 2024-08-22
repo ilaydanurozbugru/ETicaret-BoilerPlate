@@ -35,8 +35,8 @@ namespace ETicaret.Web.Startup
                         PageNames.Category,
                         L("Categories"),
                         url: "Categories",
-                        icon: "fas fa-users",
-                        permissionDependency: new SimplePermissionDependency(PermissionNames.Pages_Products)
+                        icon: "fas fa-layer-group",
+                        permissionDependency: new SimplePermissionDependency(PermissionNames.Pages_Category)
                     )
                 )
                 .AddItem(

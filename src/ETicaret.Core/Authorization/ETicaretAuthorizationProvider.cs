@@ -9,20 +9,20 @@ namespace ETicaret.Authorization
         public override void SetPermissions(IPermissionDefinitionContext context)
         {
             var admin = context.CreatePermission(PermissionNames.Pages_Admin, L("Admin"));
-            context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
-            context.CreatePermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
-            context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
-            context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host); 
+            admin.CreateChildPermission(PermissionNames.Pages_Users, L("Users"));
+            admin.CreateChildPermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
+            admin.CreateChildPermission(PermissionNames.Pages_Roles, L("Roles"));
+            admin.CreateChildPermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
 
-            var product = admin.CreateChildPermission(PermissionNames.Pages_Products);
-            product.CreateChildPermission(PermissionNames.Pages_Product_Create, L("Create"));
-            product.CreateChildPermission(PermissionNames.Pages_Product_Update, L("Update"));
-            product.CreateChildPermission(PermissionNames.Pages_Product_Delete, L("Delete"));
+            var product = admin.CreateChildPermission(PermissionNames.Pages_Products, L("Products"));
+            product.CreateChildPermission(PermissionNames.Pages_Product_Create, L("ProductCreate"));
+            product.CreateChildPermission(PermissionNames.Pages_Product_Update, L("ProductUpdate"));
+            product.CreateChildPermission(PermissionNames.Pages_Product_Delete, L("ProductDelete"));
 
-            var category = admin.CreateChildPermission(PermissionNames.Pages_Category);
-            category.CreateChildPermission(PermissionNames.Pages_Category_Create, L("Create"));
-            category.CreateChildPermission(PermissionNames.Pages_Category_Update, L("Update"));
-            category.CreateChildPermission(PermissionNames.Pages_Category_Delete, L("Delete"));
+            var category = admin.CreateChildPermission(PermissionNames.Pages_Category, L("Categories"));
+            category.CreateChildPermission(PermissionNames.Pages_Category_Create, L("CategoryCreate"));
+            category.CreateChildPermission(PermissionNames.Pages_Category_Update, L("CategoryUpdate"));
+            category.CreateChildPermission(PermissionNames.Pages_Category_Delete, L("CategoryDelete"));
         }
 
         private static ILocalizableString L(string name)

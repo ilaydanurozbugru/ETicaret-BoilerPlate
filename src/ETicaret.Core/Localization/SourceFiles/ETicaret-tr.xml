@@ -123,5 +123,22 @@
 		<text name="Price">Fiyat</text>
 		<text name="StockQuantity">Stok Miktarı</text>
 
+		<text name="Admin">Admin</text>
+		<text name="Categories">Kategoriler</text>
+		<text name="Category">Kategori</text>
+		<text name="CategoryCreate">Kategori Oluştur</text>
+		<text name="CategoryUpdate">Kategori Güncelle</text>
+		<text name="CategoryDelete">Kategori Sil</text>
+		<text name="Picture">Resim</text>
+
+	
+		<text name="ProductCreate">Ürün Oluştur</text>
+		<text name="ProductUpdate">Ürün Güncelle</text>
+		<text name="ProductDelete">Ürün Sil</text>
+		
+		
+		
+		
+
 	</texts>
 </localizationDictionary>

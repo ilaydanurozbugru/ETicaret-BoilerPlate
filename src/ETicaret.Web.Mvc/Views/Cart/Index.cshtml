@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Sepetim";
+}
+@section scripts
+{
+    <environment names="Development">
+        <script src="~/view-resources/Views/Cart/Index.js" asp-append-version="true"></script>
+    </environment>
+
+    <environment names="Staging,Production">
+        <script src="~/view-resources/Views/Cart/Index.min.js" asp-append-version="true"></script>
+    </environment>
+}
+
+<div class="container pt-5">
+    <h2 class="text-center">Sepetim</h2>
+    <div class="row">
+        <div class="col-lg-8">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Ürün</th>
+                        <th>Adet Fiyatı</th>
+                        <th>Adet</th>
+                        <th>Toplam</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-items">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+
+            <h4>Sepet Özeti</h4>
+            <p>Toplam Fiyat: <span id="cart-total-price">₺0,00</span></p>
+            <button class="btn btn-primary btn-block">Ödemeye Geç</button>
+        </div>
+    </div>
+</div>
+

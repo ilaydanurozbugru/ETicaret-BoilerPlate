@@ -5,32 +5,38 @@ using ETicaret.Sessions.Dto;
 
 namespace ETicaret.Sessions
 {
-    public class SessionAppService : ETicaretAppServiceBase, ISessionAppService
-    {
-        [DisableAuditing]
-        public async Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations()
+
+        public class SessionAppService : ETicaretAppServiceBase, ISessionAppService
         {
-            var output = new GetCurrentLoginInformationsOutput
+            [DisableAuditing]
+            public async Task<GetCurrentLoginInformationsOutput> GetCurrentLoginInformations()
             {
-                Application = new ApplicationInfoDto
+                var output = new GetCurrentLoginInformationsOutput
                 {
-                    Version = AppVersionHelper.Version,
-                    ReleaseDate = AppVersionHelper.ReleaseDate,
-                    Features = new Dictionary<string, bool>()
+                    Application = new ApplicationInfoDto
+                    {
+                        Version = AppVersionHelper.Version,
+                        ReleaseDate = AppVersionHelper.ReleaseDate,
+                        Features = new Dictionary<string, bool>()
+                    }
+                };
+
+                if (AbpSession.TenantId.HasValue)
+                {
+                    output.Tenant = ObjectMapper.Map<TenantLoginInfoDto>(await GetCurrentTenantAsync());
                 }
-            };
 
-            if (AbpSession.TenantId.HasValue)
-            {
-                output.Tenant = ObjectMapper.Map<TenantLoginInfoDto>(await GetCurrentTenantAsync());
+                // Sadece oturum açılmışsa User bilgisi ekle
+                if (AbpSession.UserId.HasValue)
+                {
+                    output.User = ObjectMapper.Map<UserLoginInfoDto>(await GetCurrentUserAsync());
+                }
+                else
+                {
+                    output.User = null; // Oturum açılmamışsa User bilgisi null olacak
+                }
+
+                return output;
             }
-
-            if (AbpSession.UserId.HasValue)
-            {
-                output.User = ObjectMapper.Map<UserLoginInfoDto>(await GetCurrentUserAsync());
-            }
-
-            return output;
         }
     }
-}
